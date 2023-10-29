@@ -13,7 +13,7 @@ export default (state, elements, watchedState) => {
         watchedState.status = 'loading';
         loadXML(url, watchedState, state)
           .then(() => {
-            watchedState.error = '';
+            watchedState.error = null;
           });
       })
       .catch((e) => {

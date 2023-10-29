@@ -16,12 +16,14 @@ const containers = (name, lists) => {
   return card;
 };
 
-const handleErrors = (elements, errorState, i18n) => {
-  if (errorState.length > 0) {
-    elements.feedBack.textContent = i18n.t(errorState);
-    elements.feedBack.classList.replace('text-success', 'text-danger');
-    elements.inputField.classList.add('is-invalid');
-  }
+const handleErrors = (elements, currentError, prevError, i18n) => {
+  const { feedBack, inputField } = elements;
+  inputField.classList.add('is-invalid');
+  feedBack.classList.remove('text-info', 'text-success');
+  feedBack.classList.add('text-danger');
+  feedBack.textContent = currentError !== null
+    ? i18n.t(currentError)
+    : i18n.t(prevError);
 };
 
 const renderFeeds = (elements, feeds) => {
@@ -89,7 +91,7 @@ const renderStatus = (elements, validationState, i18n) => {
     case 'success':
       elements.feedBack.textContent = i18n.t('success');
       elements.feedBack.classList.replace('text-danger', 'text-success');
-      elements.inputField.classList.remove('is-invalid');
+      elements.inputField.classList.remove('is-invalid', 'text-info');
       elements.inputField.focus();
       elements.inputField.value = '';
       elements.inputButton.disabled = false;
@@ -113,10 +115,10 @@ const renderVisitedLinks = (setID) => {
 };
 
 const render = (state, elements, i18n) => {
-  const watcher = onChange(state, (path, value) => {
+  const watcher = onChange(state, (path, value, prevValue) => {
     switch (path) {
       case 'error':
-        handleErrors(elements, value, i18n);
+        handleErrors(elements, value, prevValue, i18n);
         break;
       case 'feeds':
         renderFeeds(elements, state.feeds);

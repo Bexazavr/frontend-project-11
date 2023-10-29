@@ -8,7 +8,7 @@ export default () => {
   const state = {
     urls: [],
     valid: null,
-    error: '',
+    error: null,
     status: 'awaiting',
     feeds: [],
     posts: [],
@@ -19,7 +19,6 @@ export default () => {
   const i18n = i18next.createInstance();
   i18n.init({
     lng: 'ru',
-    debug: true,
     resources,
   });
 

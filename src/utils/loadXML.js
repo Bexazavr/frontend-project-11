@@ -18,4 +18,7 @@ export default (url, watchedState, state) => (axios.get(`https://allorigins.hexl
     watchedState.feeds.push(feed);
     watchedState.posts.push(...feedPosts);
     update(state, watchedState);
-  }).catch((e) => console.log(e)));
+  }).catch((e) => {
+    watchedState.error = e.name;
+    watchedState.status = 'awaiting';
+  }));
