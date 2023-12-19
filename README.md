@@ -30,8 +30,6 @@ $ cd frontend-project-11
 $ make install
 ```
 
-If you want to install package globally in your system you should run:
-
 ### Development
 
 To start local server:
