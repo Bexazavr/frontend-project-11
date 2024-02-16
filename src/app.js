@@ -3,19 +3,11 @@ import axios from 'axios';
 import * as yup from 'yup';
 import render from './view';
 import {
-  fetchData,
-  parseData,
-  handleData,
-  updatePosts,
+  fetchData, parseData, handleData, updatePosts,
 } from './utils/getRss';
 
 const validate = (inputUrl, feeds) => {
-  
-  const schema = yup
-    .string()
-    .trim()
-    .required()
-    .url()
+  const schema = yup.string().trim().required().url()
     .notOneOf(feeds);
 
   return schema.validate(inputUrl);
@@ -41,7 +33,7 @@ const app = (i18nextInstance) => {
       url: 'form.feedback.invalidUrl',
     },
   });
-  
+
   const refreshTime = 5000;
 
   const initialState = {
@@ -69,18 +61,19 @@ const app = (i18nextInstance) => {
     modalEl: document.getElementById('modal'),
     modalTitle: document.querySelector('.modal-title'),
     modalBody: document.querySelector('.modal-body'),
-    closeModalButtons: document.querySelectorAll('#modal button[data-bs-dismiss="modal"]'),
+    closeModalButtons: document.querySelectorAll(
+      '#modal button[data-bs-dismiss="modal"]',
+    ),
     readAllModalButton: document.querySelector('#modal a.full-article'),
   };
 
-  const state = onChange(initialState, render(elements, initialState, i18nextInstance));
+  const state = onChange(
+    initialState,
+    render(elements, initialState, i18nextInstance),
+  );
 
   const {
-    rssForm,
-    modal,
-    rssFeeds,
-    rssPosts,
-    uiState,
+    rssForm, modal, rssFeeds, rssPosts, uiState,
   } = state;
 
   elements.form.addEventListener('submit', (e) => {
@@ -106,19 +99,18 @@ const app = (i18nextInstance) => {
       });
   });
 
-
-elements.postsContainer.addEventListener('click', (e) => {
-  const target = e.target;
-  if (target.nodeName === 'A' || target.nodeName === 'BUTTON') {
-    const selectedId = target.getAttribute('data-id');
-    const selectedPost = rssPosts.find(({ id }) => id === selectedId);
-    if (selectedPost) {
-      selectedPost.viewed = true;
-      uiState.viewedPostIds.add(selectedId);
-      modal.post = selectedPost;
+  elements.postsContainer.addEventListener('click', (e) => {
+    const { target } = e;
+    if (target.nodeName === 'A' || target.nodeName === 'BUTTON') {
+      const selectedId = target.getAttribute('data-id');
+      const selectedPost = rssPosts.find(({ id }) => id === selectedId);
+      if (selectedPost) {
+        selectedPost.viewed = true;
+        uiState.viewedPostIds.add(selectedId);
+        modal.post = selectedPost;
+      }
     }
-  }
-})
+  });
 
   setTimeout(() => updatePosts(state, refreshTime), refreshTime);
 };

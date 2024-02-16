@@ -49,7 +49,6 @@ const normalizePostsData = (posts) => posts.map(({ title, description, link }) =
 
 const handleData = (data, state, url) => {
   const { posts, feed } = data;
-  const feedId = uniqueId();
   state.rssFeeds.push({ id: uniqueId(), link: url, ...feed });
   const postsNormalized = normalizePostsData(posts);
   state.rssPosts.push(...postsNormalized);
