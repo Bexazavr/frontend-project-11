@@ -26,7 +26,7 @@ const parseData = (contentData) => {
 
   const items = Array.from(doc.querySelectorAll('item'));
   const posts = [];
-  items.map((item) => posts.push({
+  items.forEach((item) => posts.push({
     title: item.querySelector('title').textContent,
     description: item.querySelector('description').textContent,
     link: item.querySelector('link').textContent,
@@ -39,9 +39,8 @@ const parseData = (contentData) => {
   return { posts, feed };
 };
 
-const normalizePostsData = (posts, feedId) => posts.map(({ title, description, link }) => ({
+const normalizePostsData = (posts) => posts.map(({ title, description, link }) => ({
   id: uniqueId(),
-  feedId,
   title,
   description,
   link,
@@ -51,8 +50,8 @@ const normalizePostsData = (posts, feedId) => posts.map(({ title, description, l
 const handleData = (data, state, url) => {
   const { posts, feed } = data;
   const feedId = uniqueId();
-  state.rssFeeds.push({ id: feedId, link: url, ...feed });
-  const postsNormalized = normalizePostsData(posts, feedId);
+  state.rssFeeds.push({ id: uniqueId(), link: url, ...feed });
+  const postsNormalized = normalizePostsData(posts);
   state.rssPosts.push(...postsNormalized);
 };
 
@@ -63,10 +62,10 @@ const updatePosts = (state, refreshTime) => {
     .then((response) => {
       const { posts } = parseData(response.data.contents);
       const existedPostLinks = rssPosts.map((post) => post.link);
-      let newPosts = posts.filter((post) => !existedPostLinks.includes(post.link));
+      const newPosts = posts.filter((post) => !existedPostLinks.includes(post.link));
       if (newPosts.length > 0) {
-        newPosts = normalizePostsData(newPosts, feed.id);
-        rssPosts.push(...newPosts);
+        const normalizedPosts = normalizePostsData(newPosts);
+        rssPosts.push(...normalizedPosts);
       }
     }));
 

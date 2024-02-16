@@ -16,23 +16,15 @@ const renderState = ({ feedbackEl, form, input }, value, i18nextInstance) => {
       feedbackEl.classList.remove('text-warning');
       feedbackEl.classList.add('text-danger');
       break;
-    case 'valid':
-      input.classList.remove('is-invalid');
-      feedbackEl.innerHTML = '';
-      break;
     case 'invalid':
       input.classList.add('is-invalid');
       feedbackEl.classList.remove('text-success');
       feedbackEl.classList.remove('text-warning');
       feedbackEl.classList.add('text-danger');
       break;
-    case 'loading':
-      feedbackEl.classList.remove('text-success');
-      feedbackEl.classList.remove('text-danger');
-      feedbackEl.classList.add('text-warning');
-      feedbackEl.textContent = i18nextInstance.t('form.feedback.loading');
-      break;
     case 'success':
+      input.classList.remove('is-invalid');
+      feedbackEl.innerHTML = '';
       feedbackEl.classList.remove('text-danger');
       feedbackEl.classList.remove('text-warning');
       feedbackEl.classList.add('text-success');
@@ -88,7 +80,7 @@ const renderPosts = ({ postsContainer }, value, i18nextInstance) => {
   ul.classList.add('list-group', 'border-0', 'rounder-0');
   value.forEach((post) => {
     const li = document.createElement('li');
-    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    li.classList.add('list-group-item', 'post', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     const a = document.createElement('a');
     a.setAttribute('href', post.link);
     a.classList.add(post.viewed ? 'fw-normal' : 'fw-bold');

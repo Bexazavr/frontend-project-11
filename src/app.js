@@ -10,16 +10,7 @@ import {
 } from './utils/getRss';
 
 const validate = (inputUrl, feeds) => {
-  yup.setLocale({
-    mixed: {
-      required: 'form.feedback.required',
-      notOneOf: 'form.feedback.notOneOf',
-    },
-    string: {
-      url: 'form.feedback.invalidUrl',
-    },
-  });
-
+  
   const schema = yup
     .string()
     .trim()
@@ -41,6 +32,16 @@ const handleError = (error) => {
 };
 
 const app = (i18nextInstance) => {
+  yup.setLocale({
+    mixed: {
+      required: 'form.feedback.required',
+      notOneOf: 'form.feedback.notOneOf',
+    },
+    string: {
+      url: 'form.feedback.invalidUrl',
+    },
+  });
+  
   const refreshTime = 5000;
 
   const initialState = {
@@ -90,16 +91,14 @@ const app = (i18nextInstance) => {
     const feeds = rssFeeds.map(({ link }) => link);
     validate(url, feeds)
       .then(() => {
-        rssForm.addingNewFeedState = 'valid';
+        rssForm.addingNewFeedState = 'validating';
         rssForm.error = null;
-        rssForm.addingNewFeedState = 'loading';
         return fetchData(url);
       })
       .then((response) => {
         const data = parseData(response.data.contents);
         handleData(data, state, url);
         rssForm.addingNewFeedState = 'success';
-        rssForm.addingNewFeedState = 'ready';
       })
       .catch((error) => {
         rssForm.error = handleError(error);
@@ -107,16 +106,19 @@ const app = (i18nextInstance) => {
       });
   });
 
-  elements.modalEl.addEventListener('show.bs.modal', (e) => {
-    const button = e.relatedTarget;
-    const selectedId = button.getAttribute('data-bs-id');
+
+elements.postsContainer.addEventListener('click', (e) => {
+  const target = e.target;
+  if (target.nodeName === 'A' || target.nodeName === 'BUTTON') {
+    const selectedId = target.getAttribute('data-id');
     const selectedPost = rssPosts.find(({ id }) => id === selectedId);
     if (selectedPost) {
       selectedPost.viewed = true;
       uiState.viewedPostIds.add(selectedId);
       modal.post = selectedPost;
     }
-  });
+  }
+})
 
   setTimeout(() => updatePosts(state, refreshTime), refreshTime);
 };
