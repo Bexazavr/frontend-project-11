@@ -29,6 +29,8 @@ const renderState = ({ feedbackEl, form, input }, value, i18nextInstance) => {
       feedbackEl.classList.remove('text-warning');
       feedbackEl.classList.add('text-success');
       feedbackEl.textContent = i18nextInstance.t('form.feedback.success');
+      form.reset();
+      input.focus();
       break;
     default:
       throw new Error(`Unknown process state: ${value}`);
