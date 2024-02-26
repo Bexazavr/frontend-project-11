@@ -84,7 +84,6 @@ const app = (i18nextInstance) => {
     const feeds = rssFeeds.map(({ link }) => link);
     validate(url, feeds)
       .then(() => {
-        rssForm.addingNewFeedState = 'validating';
         rssForm.error = null;
         return fetchData(url);
       })
@@ -104,11 +103,14 @@ const app = (i18nextInstance) => {
     if (target.nodeName === 'A' || target.nodeName === 'BUTTON') {
       const selectedId = target.getAttribute('data-id');
       const selectedPost = rssPosts.find(({ id }) => id === selectedId);
-      if (selectedPost) {
-        selectedPost.viewed = true;
-        uiState.viewedPostIds.add(selectedId);
-        modal.post = selectedPost;
+
+      if (!selectedPost) {
+        return;
       }
+
+      selectedPost.viewed = true;
+      uiState.viewedPostIds.add(selectedId);
+      modal.post = selectedPost;
     }
   });
 
