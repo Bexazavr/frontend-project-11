@@ -48,5 +48,5 @@ $ make build
 ```
 
 ## Demo:
-[bexa.space](https://bexa.space)
+[RSS aggregator](https://frontend-project-11-two-eta.vercel.app)
 
